@@ -5,3 +5,6 @@ sudo apt update && sudo apt upgrade -y
 
 echo "installing stuff"
 sudo apt install nano curl git wget -y
+
+echo "ssh generating keys"
+ssh-keygen -t ed25519 
