@@ -61,3 +61,5 @@ echo "[*] Testing configuration with dry-run..."
 sudo unattended-upgrade --dry-run --debug
 
 echo "[✓] Unattended upgrades are now set to install ALL updates."
+
+echo "copy public key from .ssh folder and run sudo systemctl restart ssh"
