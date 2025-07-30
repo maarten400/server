@@ -46,8 +46,6 @@ Unattended-Upgrade::Allowed-Origins {
         "${DISTRO_ID}:${DISTRO_CODENAME}";
         "${DISTRO_ID}:${DISTRO_CODENAME}-security";
         "${DISTRO_ID}:${DISTRO_CODENAME}-updates";
-        "${DISTRO_ID}:${DISTRO_CODENAME}-proposed";
-        "${DISTRO_ID}:${DISTRO_CODENAME}-backports";
 };
 
 Unattended-Upgrade::Automatic-Reboot "true";
