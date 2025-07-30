@@ -36,16 +36,28 @@ APT::Periodic::AutocleanInterval "7";
 APT::Periodic::Unattended-Upgrade "1";
 EOF
 
-echo "[*] Configuring /etc/apt/apt.conf.d/50unattended-upgrades..."
-sudo sed -i 's|//\(.*"${distro_id}:${distro_codename}-security";\)|\1|' /etc/apt/apt.conf.d/50unattended-upgrades
+echo "[*] Configuring /etc/apt/apt.conf.d/50unattended-upgrades for all updates..."
 
-# Optional: enable auto removal of unused dependencies
-sudo sed -i 's|//Unattended-Upgrade::Remove-Unused-Dependencies.*|Unattended-Upgrade::Remove-Unused-Dependencies "true";|' /etc/apt/apt.conf.d/50unattended-upgrades
+DISTRO_ID=$(lsb_release -si)
+DISTRO_CODENAME=$(lsb_release -sc)
 
-# Optional: enable automatic reboot if needed
-sudo sed -i 's|//Unattended-Upgrade::Automatic-Reboot.*|Unattended-Upgrade::Automatic-Reboot "true";|' /etc/apt/apt.conf.d/50unattended-upgrades
+cat <<EOF | sudo tee /etc/apt/apt.conf.d/50unattended-upgrades
+Unattended-Upgrade::Allowed-Origins {
+        "${DISTRO_ID}:${DISTRO_CODENAME}";
+        "${DISTRO_ID}:${DISTRO_CODENAME}-security";
+        "${DISTRO_ID}:${DISTRO_CODENAME}-updates";
+        "${DISTRO_ID}:${DISTRO_CODENAME}-proposed";
+        "${DISTRO_ID}:${DISTRO_CODENAME}-backports";
+};
 
-echo "[*] Testing unattended-upgrades configuration..."
+Unattended-Upgrade::Automatic-Reboot "true";
+Unattended-Upgrade::Automatic-Reboot-Time "03:00";
+Unattended-Upgrade::Remove-Unused-Dependencies "true";
+Unattended-Upgrade::Remove-New-Unused-Dependencies "true";
+Unattended-Upgrade::MailOnlyOnError "true";
+EOF
+
+echo "[*] Testing configuration with dry-run..."
 sudo unattended-upgrade --dry-run --debug
 
-echo "[✓] Unattended upgrades are configured!"
+echo "[✓] Unattended upgrades are now set to install ALL updates."
